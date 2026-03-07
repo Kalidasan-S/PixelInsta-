@@ -1,43 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Search • Piexlinsta</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="bg-slate-50 min-h-screen">
-    <div class="max-w-xl mx-auto py-8 px-4">
-      <header class="mb-6 flex items-center justify-between">
-        <h1 class="text-xl font-semibold">Search Results</h1>
-        <a href="{% url 'home' %}" class="text-sm text-blue-500 font-medium">Back to Home</a>
-      </header>
 
-      <form action="{% url 'search' %}" method="GET" class="mb-6">
-        <input type="text" name="q" value="{{ query }}" placeholder="Search users" class="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-100 focus:outline-none" required>
-      </form>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search • Piexlinsta</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-      {% if query %}
-        <div class="space-y-4">
-          {% for u in users %}
-          <div class="bg-white rounded-xl border border-slate-200 p-4 flex items-center justify-between">
-            <div class="flex items-center gap-3 shrink-0">
-              <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-sm font-semibold text-slate-600">
-                {{ u.username|first|upper }}
-              </div>
-              <div>
-                <a href="{% url 'profile_dynamic' u.username %}" class="font-semibold text-slate-900 hover:text-blue-500">{{ u.username }}</a>
-                <p class="text-xs text-slate-500">{{ u.first_name }} {{ u.last_name }}</p>
-              </div>
-            </div>
-            <a href="{% url 'profile_dynamic' u.username %}" class="px-4 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-lg">
-              View Profile
-            </a>
+<body class="bg-slate-50 min-h-screen pb-14 md:pb-0">
+  <div class="max-w-xl mx-auto py-4 md:py-8 px-4">
+    <header class="mb-6 flex items-center justify-between">
+      <h1 class="text-xl font-semibold">Search Results</h1>
+      <a href="{% url 'home' %}" class="text-sm text-blue-500 font-medium">Back to Home</a>
+    </header>
+
+    <form action="{% url 'search' %}" method="GET" class="mb-6">
+      <input type="text" name="q" value="{{ query }}" placeholder="Search users"
+        class="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-100 focus:outline-none"
+        required>
+    </form>
+
+    {% if query %}
+    <div class="space-y-4">
+      {% for u in users %}
+      <div class="bg-white rounded-xl border border-slate-200 p-4 flex items-center justify-between">
+        <div class="flex items-center gap-3 shrink-0">
+          <div
+            class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-sm font-semibold text-slate-600">
+            {{ u.username|first|upper }}
           </div>
-          {% empty %}
-          <p class="text-slate-500 text-sm text-center py-6">No users found matching "{{ query }}".</p>
-          {% endfor %}
+          <div>
+            <a href="{% url 'profile_dynamic' u.username %}" class="font-semibold text-slate-900 hover:text-blue-500">{{
+              u.username }}</a>
+            <p class="text-xs text-slate-500">{{ u.first_name }} {{ u.last_name }}</p>
+          </div>
         </div>
-      {% endif %}
+        <a href="{% url 'profile_dynamic' u.username %}"
+          class="px-4 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-lg">
+          View Profile
+        </a>
+      </div>
+      {% empty %}
+      <p class="text-slate-500 text-sm text-center py-6">No users found matching "{{ query }}".</p>
+      {% endfor %}
     </div>
-  </body>
+    {% endif %}
+  </div>
+  <!-- Mobile bottom navigation -->
+  <nav
+    class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around items-center h-14 z-50 pb-safe">
+    <a href="{% url 'home' %}"
+      class="p-2 {% if request.resolver_match.url_name == 'home' %}text-slate-900{% else %}text-slate-500{% endif %} hover:text-slate-900 transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+        fill="{% if request.resolver_match.url_name == 'home' %}currentColor{% else %}none{% endif %}"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+        <polyline points="9 22 9 12 15 12 15 22" />
+      </svg>
+    </a>
+    <a href="{% url 'search' %}"
+      class="p-2 {% if request.resolver_match.url_name == 'search' %}text-slate-900{% else %}text-slate-500{% endif %} hover:text-slate-900 transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor"
+        stroke-width="{% if request.resolver_match.url_name == 'search' %}2.5{% else %}2{% endif %}"
+        stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.3-4.3" />
+      </svg>
+    </a>
+    <a href="{% url 'inbox' %}"
+      class="p-2 {% if request.resolver_match.url_name == 'inbox' %}text-slate-900{% else %}text-slate-500{% endif %} hover:text-slate-900 transition-colors relative">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+        fill="{% if request.resolver_match.url_name == 'inbox' %}currentColor{% else %}none{% endif %}"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </svg>
+    </a>
+    <a href="{% url 'notifications' %}"
+      class="p-2 {% if request.resolver_match.url_name == 'notifications' %}text-slate-900{% else %}text-slate-500{% endif %} hover:text-slate-900 transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+        fill="{% if request.resolver_match.url_name == 'notifications' %}currentColor{% else %}none{% endif %}"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+        <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+      </svg>
+    </a>
+    <a href="{% url 'profile' %}"
+      class="p-2 {% if request.resolver_match.url_name == 'profile' %}text-slate-900{% else %}text-slate-500{% endif %} hover:text-slate-900 transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+        fill="{% if request.resolver_match.url_name == 'profile' %}currentColor{% else %}none{% endif %}"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+      </svg>
+    </a>
+  </nav>
+</body>
+
 </html>

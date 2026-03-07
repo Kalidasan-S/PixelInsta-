@@ -1,54 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Chat with {{ target_user.username }} • Piexlinsta</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="bg-slate-50 min-h-screen flex flex-col">
-    <div class="max-w-2xl mx-auto w-full flex-1 flex flex-col bg-white border-x border-slate-200 shadow-sm min-h-screen relative">
-      <header class="sticky top-0 bg-white/80 backdrop-blur-md border-b border-slate-200 p-4 flex items-center gap-4 z-10">
-        <a href="{% url 'inbox' %}" class="text-slate-500 hover:text-slate-800">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-        </a>
-        <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-sm font-semibold text-slate-600 shrink-0">
-          {{ target_user.username|first|upper }}
-        </div>
-        <a href="{% url 'profile_dynamic' target_user.username %}" class="font-semibold text-slate-900 hover:text-blue-500">{{ target_user.username }}</a>
-      </header>
 
-      <div class="flex-1 p-4 overflow-y-auto flex flex-col gap-3" id="chat-container">
-        {% for msg in chat_messages %}
-          {% if msg.sender == request.user %}
-          <!-- Sent message -->
-          <div class="self-end bg-blue-500 text-white rounded-2xl rounded-tr-md px-4 py-2 max-w-[75%] text-sm">
-            {{ msg.content }}
-          </div>
-          {% else %}
-          <!-- Received message -->
-          <div class="self-start bg-slate-100 text-slate-800 rounded-2xl rounded-tl-md px-4 py-2 max-w-[75%] text-sm">
-            {{ msg.content }}
-          </div>
-          {% endif %}
-        {% empty %}
-          <p class="text-center text-slate-400 text-sm mt-10">No messages yet. Say hi!</p>
-        {% endfor %}
-      </div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat with {{ target_user.username }} • Piexlinsta</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-      <div class="p-4 bg-white border-t border-slate-200 sticky bottom-0">
-        <form method="POST" class="flex gap-2">
-          {% csrf_token %}
-          <input type="text" name="content" placeholder="Type a message..." class="flex-1 bg-slate-100 border-none rounded-full px-4 text-sm focus:ring-2 focus:ring-slate-200" required autocomplete="off">
-          <button type="submit" class="w-10 h-10 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
-          </button>
-        </form>
+<body class="bg-slate-50 min-h-screen flex flex-col">
+  <div
+    class="max-w-2xl mx-auto w-full flex-1 flex flex-col bg-white border-x border-slate-200 shadow-sm min-h-screen relative">
+    <header
+      class="sticky top-0 bg-white/80 backdrop-blur-md border-b border-slate-200 p-4 flex items-center gap-4 z-10">
+      <a href="{% url 'inbox' %}" class="text-slate-500 hover:text-slate-800">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m15 18-6-6 6-6" />
+        </svg>
+      </a>
+      <div
+        class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-sm font-semibold text-slate-600 shrink-0">
+        {{ target_user.username|first|upper }}
       </div>
+      <a href="{% url 'profile_dynamic' target_user.username %}"
+        class="font-semibold text-slate-900 hover:text-blue-500">{{ target_user.username }}</a>
+    </header>
+
+    <div class="flex-1 p-4 overflow-y-auto flex flex-col gap-3" id="chat-container">
+      {% for msg in chat_messages %}
+      {% if msg.sender == request.user %}
+      <!-- Sent message -->
+      <div class="self-end bg-blue-500 text-white rounded-2xl rounded-tr-md px-4 py-2 max-w-[75%] text-sm">
+        {{ msg.content }}
+      </div>
+      {% else %}
+      <!-- Received message -->
+      <div class="self-start bg-slate-100 text-slate-800 rounded-2xl rounded-tl-md px-4 py-2 max-w-[75%] text-sm">
+        {{ msg.content }}
+      </div>
+      {% endif %}
+      {% empty %}
+      <p class="text-center text-slate-400 text-sm mt-10">No messages yet. Say hi!</p>
+      {% endfor %}
     </div>
-    <script>
-      // Scroll to bottom on load
-      const container = document.getElementById('chat-container');
-      container.scrollTop = container.scrollHeight;
-    </script>
-  </body>
+
+    <div class="p-4 bg-white border-t border-slate-200 sticky bottom-0">
+      <form method="POST" class="flex gap-2">
+        {% csrf_token %}
+        <input type="text" name="content" placeholder="Type a message..."
+          class="flex-1 bg-slate-100 border-none rounded-full px-4 text-sm focus:ring-2 focus:ring-slate-200" required
+          autocomplete="off">
+        <button type="submit"
+          class="w-10 h-10 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m22 2-7 20-4-9-9-4Z" />
+            <path d="M22 2 11 13" />
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+  <script>
+    // Scroll to bottom on load
+    const container = document.getElementById('chat-container');
+    container.scrollTop = container.scrollHeight;
+  </script>
+</body>
+
 </html>
