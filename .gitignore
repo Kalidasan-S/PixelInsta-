@@ -1,0 +1,15 @@
+# Virtual Environment
+Include/
+Lib/
+Scripts/
+pyvenv.cfg
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+*.sqlite3
+media/
+.env

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Profile • Piexlinsta</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+      .avatar-wrap:hover .avatar-overlay { opacity: 1; }
+      .avatar-overlay { opacity: 0; transition: opacity 0.2s; }
+      details .edit-panel { padding: 1.25rem 0; border-top: 1px solid #e2e8f0; }
+      .post-tile:hover .post-actions { opacity: 1; }
+      .post-actions { opacity: 0; transition: opacity 0.15s; }
+    </style>
+  </head>
+  <body class="bg-slate-50 min-h-screen">
+    <div class="max-w-5xl mx-auto flex gap-10 px-6 py-8">
+      <!-- Left sidebar -->
+      <aside class="w-56 hidden md:flex flex-col gap-2">
+        <div class="mb-4">
+          <span class="text-xl font-semibold">Piexlinsta</span>
+        </div>
+        <a
+          href="{% url 'home' %}"
+          class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100"
+        >
+          <span>Home</span>
+        </a>
+        <a
+          href="{% url 'profile' %}"
+          class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium bg-slate-900 text-white"
+        >
+          <span>Profile</span>
+        </a>
+        <a
+          href="{% url 'inbox' %}"
+          class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-500 hover:bg-slate-100"
+        >
+          <span>Messages</span>
+        </a>
+        <a
+          href="{% url 'notifications' %}"
+          class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-500 hover:bg-slate-100"
+        >
+          <span>Notifications</span>
+        </a>
+        <form action="{% url 'search' %}" method="GET" class="px-3 mt-4">
+          <input type="text" name="q" placeholder="Search users" class="w-full bg-slate-100 border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-slate-200" required>
+        </form>
+      </aside>
+
+      <!-- Main column -->
+      <div class="flex-1 max-w-2xl mx-auto md:mx-0">
+        <!-- Top bar (mobile) -->
+        <header class="flex items-center justify-between mb-6 md:hidden">
+          <span class="text-xl font-semibold">Piexlinsta</span>
+          <a
+            href="{% url 'logout' %}"
+            class="text-sm text-blue-500 font-medium"
+          >
+            Log out
+          </a>
+        </header>
+
+        <!-- Top bar (desktop) -->
+        <header class="hidden md:flex items-center justify-between mb-6">
+          <h1 class="text-xl font-semibold">Profile</h1>
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-slate-600">@{{ request.user.username }}</span>
+            <a href="{% url 'logout' %}" class="text-sm text-blue-500 font-medium">Log out</a>
+          </div>
+        </header>
+
+      {% if messages %}
+      <div class="mb-4 p-3 rounded-lg bg-green-100 text-green-800 text-sm">
+        {% for message in messages %}{{ message }}{% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Profile header (read-only view) -->
+      <section class="flex gap-8 mb-6">
+        <div class="flex items-center justify-center shrink-0">
+          {% if profile.avatar %}
+          <img
+            src="{{ profile.avatar.url }}"
+            alt="Avatar"
+            class="w-24 h-24 rounded-full object-cover border border-slate-200"
+          />
+          {% else %}
+          <div class="w-24 h-24 rounded-full bg-slate-200 flex items-center justify-center text-3xl font-semibold text-slate-500">
+            {{ profile.user.username|first|upper }}
+          </div>
+          {% endif %}
+        </div>
+        <div class="flex-1 min-w-0">
+          <h2 class="text-lg font-semibold text-slate-900">{{ profile.user.username }}</h2>
+          <div class="flex gap-5 text-sm text-slate-600 mt-2">
+            <span><span class="font-semibold text-slate-900">{{ posts|length }}</span> posts</span>
+            <span><span class="font-semibold text-slate-900">{{ followers_count }}</span> followers</span>
+            <span><span class="font-semibold text-slate-900">{{ following_count }}</span> following</span>
+          </div>
+          <p class="text-sm text-slate-700 mt-2 whitespace-pre-line">{{ profile.bio|default:"No bio yet." }}</p>
+          {% if profile.website %}
+          <a href="{{ profile.website }}" class="text-sm text-blue-500 mt-1 inline-block" target="_blank" rel="noreferrer">{{ profile.website }}</a>
+          {% endif %}
+        </div>
+      </section>
+
+      {% if is_owner %}
+      <!-- Edit profile: one button, everything inside -->
+      <details class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <summary class="list-none cursor-pointer">
+          <span class="flex items-center justify-center gap-2 w-full py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 border-t border-slate-100">
+            Edit profile
+          </span>
+        </summary>
+        <div class="edit-panel bg-slate-50/50">
+          <div class="px-6 pb-6 space-y-6">
+            <!-- 1) Profile form: avatar, bio, website -->
+            <form method="post" enctype="multipart/form-data" class="space-y-4">
+              {% csrf_token %}
+              <div class="flex items-start gap-6">
+                <div class="avatar-wrap relative w-20 h-20 rounded-full overflow-hidden shrink-0 border border-slate-200">
+                  <label for="avatar-upload" class="cursor-pointer block w-full h-full">
+                    {% if profile.avatar %}
+                    <img src="{{ profile.avatar.url }}" alt="Avatar" class="w-full h-full object-cover rounded-full" />
+                    {% else %}
+                    <div class="w-full h-full rounded-full bg-slate-200 flex items-center justify-center text-2xl font-semibold text-slate-500">{{ request.user.username|first|upper }}</div>
+                    {% endif %}
+                    <span class="avatar-overlay absolute inset-0 rounded-full bg-black/50 flex items-center justify-center text-white text-xs font-medium text-center px-1">Change photo</span>
+                  </label>
+                  <input type="file" name="avatar" id="avatar-upload" class="hidden" accept="image/*" />
+                </div>
+                <div class="flex-1 min-w-0 space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Bio</label>
+                    <textarea name="bio" rows="2" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" placeholder="Add a bio">{{ profile.bio }}</textarea>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Website</label>
+                    <input type="url" name="website" value="{{ profile.website|default:'' }}" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" placeholder="https://example.com" />
+                  </div>
+                  <button type="submit" name="save_profile" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-lg">
+                    Save profile
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <!-- 2) New post form -->
+            <div class="pt-4 border-t border-slate-200">
+              <h3 class="text-sm font-semibold text-slate-800 mb-3">New post</h3>
+              <form method="post" enctype="multipart/form-data" class="space-y-3">
+                {% csrf_token %}
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-1">Photo</label>
+                  <input type="file" name="post_image" accept="image/*" required class="block w-full text-sm text-slate-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-600 file:font-medium" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-1">Caption (optional)</label>
+                  <textarea name="post_caption" rows="2" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" placeholder="Write a caption..."></textarea>
+                </div>
+                <button type="submit" name="add_post" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-lg">
+                  Upload post
+                </button>
+              </form>
+            </div>
+
+            <!-- 3) New story form -->
+            <div class="pt-4 border-t border-slate-200">
+              <h3 class="text-sm font-semibold text-slate-800 mb-3">New story</h3>
+              <form method="post" enctype="multipart/form-data" class="space-y-3">
+                {% csrf_token %}
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-1">Photo</label>
+                  <input type="file" name="story_image" accept="image/*" required class="block w-full text-sm text-slate-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-purple-50 file:text-purple-600 file:font-medium" />
+                </div>
+                <button type="submit" name="add_story" class="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white text-sm font-semibold rounded-lg">
+                  Add story
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </details>
+      {% else %}
+      <!-- Follow & Message buttons -->
+      <div class="flex gap-3">
+        <form method="post" action="{% url 'follow_user' request.resolver_match.kwargs.username %}" class="flex-1">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
+          <button type="submit" class="w-full py-2.5 rounded-lg text-sm font-semibold shadow-sm transition-colors {% if is_following %}bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200{% else %}bg-blue-500 text-white hover:bg-blue-600{% endif %}">
+            {% if is_following %}Following{% else %}Follow{% endif %}
+          </button>
+        </form>
+        <a href="{% url 'chat' request.resolver_match.kwargs.username %}" class="flex-1 flex items-center justify-center py-2.5 rounded-lg text-sm font-semibold shadow-sm transition-colors bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
+          Message
+        </a>
+      </div>
+      {% endif %}
+
+      <!-- Posts grid -->
+      <section class="mt-8">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-sm font-semibold text-slate-800">Posts</span>
+          <span class="text-sm text-slate-500">({{ posts|length }})</span>
+        </div>
+        {% if posts %}
+        <div class="grid grid-cols-3 gap-1">
+          {% for post in posts %}
+          <div class="post-tile relative aspect-square bg-slate-200 rounded-lg overflow-hidden">
+            <a href="{{ post.image.url }}" target="_blank" class="block w-full h-full">
+              <img src="{{ post.image.url }}" alt="Post" class="w-full h-full object-cover" />
+            </a>
+            <div class="post-actions absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-3 p-2">
+              <div class="flex gap-4 text-white font-semibold">
+                <div class="flex items-center gap-1.5 cursor-default">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                  </svg>
+                  <span>{{ post.likes.count }}</span>
+                </div>
+                <div class="flex items-center gap-1.5 cursor-default">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
+                  </svg>
+                  <span>{{ post.comments.count }}</span>
+                </div>
+              </div>
+              <form method="post" action="{% url 'post_delete' post.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <button
+                  type="submit"
+                  class="bg-red-600/90 hover:bg-red-700 text-white text-xs font-semibold px-3 py-1.5 rounded-md transition-colors"
+                  onclick="return confirm('Delete this post?');"
+                >
+                  Delete
+                </button>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="aspect-square max-w-sm rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center text-slate-400 text-sm">
+          {% if is_owner %}No posts yet. Open “Edit profile” to add one.{% else %}No posts yet.{% endif %}
+        </div>
+        {% endif %}
+      </section>
+      </div>
+    </div>
+  </body>
+</html>

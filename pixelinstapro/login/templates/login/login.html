@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login • Piexlinsta</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Grand+Hotel&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#256af4",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"],
+                        "script": ["Grand Hotel", "cursive"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .brand-font {
+            font-family: 'Grand Hotel', cursive;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col items-center justify-center p-4">
+<div class="w-full max-w-[350px] flex flex-col gap-3">
+<!-- Main Login Card -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-sm px-10 pt-10 pb-6 flex flex-col items-center">
+<!-- Brand Logo -->
+<div class="mb-8">
+<h1 class="brand-font text-5xl text-slate-900 dark:text-white select-none">Piexlinsta</h1>
+</div>
+<!-- Login Form -->
+<form method="post" class="w-full flex flex-col gap-2">
+{% csrf_token %}
+{% if form.errors %}
+<ul class="mb-2 text-red-500 text-xs space-y-1">
+{% for field in form %}
+{% for error in field.errors %}
+<li>{{ error }}</li>
+{% endfor %}
+{% endfor %}
+{% for error in form.non_field_errors %}
+<li>{{ error }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+<div class="relative w-full">
+<input name="username" class="w-full px-2 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-sm text-xs focus:ring-0 focus:border-slate-400 dark:focus:border-slate-500 placeholder:text-slate-500 text-slate-900 dark:text-slate-100" placeholder="Phone number, username, or email" type="text"/>
+</div>
+<div class="relative w-full flex items-center">
+<input name="password" class="w-full px-2 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-sm text-xs focus:ring-0 focus:border-slate-400 dark:focus:border-slate-500 placeholder:text-slate-500 text-slate-900 dark:text-slate-100" placeholder="Password" type="password"/>
+<button class="absolute right-2 text-sm font-semibold text-slate-900 dark:text-slate-100 hover:opacity-70" type="button">
+                        Show
+                    </button>
+</div>
+<button class="mt-2 w-full bg-primary hover:bg-primary/90 text-white font-semibold py-1.5 rounded-lg text-sm transition-colors duration-200" type="submit">
+                    Log In
+                </button>
+<!-- Divider -->
+<div class="flex items-center my-4 w-full">
+<div class="flex-grow h-px bg-slate-200 dark:bg-slate-800"></div>
+<span class="px-4 text-xs font-semibold text-slate-500 uppercase">OR</span>
+<div class="flex-grow h-px bg-slate-200 dark:bg-slate-800"></div>
+</div>
+<!-- Facebook Login Mock -->
+<button class="flex items-center justify-center gap-2 w-full text-sm font-semibold text-[#385185] dark:text-primary" type="button">
+<span class="material-symbols-outlined text-lg">social_leaderboard</span>
+                    Log in with Facebook
+                </button>
+<!-- Forgot Password -->
+<a class="mt-4 text-center text-xs text-[#00376b] dark:text-primary/80 hover:underline" href="#">
+                    Forgot password?
+                </a>
+</form>
+</div>
+<!-- Sign Up Card -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-sm py-5 text-center">
+<p class="text-sm text-slate-900 dark:text-slate-100">
+                Don't have an account? 
+                <a class="font-semibold text-primary hover:underline" href="{% url 'register' %}">Sign up</a>
+</p>
+</div>
+<!-- App Download Section -->
+<div class="flex flex-col items-center gap-4 mt-2">
+<p class="text-sm text-slate-900 dark:text-slate-100">Get the app.</p>
+<div class="flex gap-2 h-10">
+<img alt="Get it on Google Play" class="h-full cursor-pointer" data-alt="Google Play Store download badge" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBttd6F58M7TMPEukR4tCNIY2nRtodcnlmW2A2I80t_8ti1tjKSl1ueV1SHg4c8pFZF7BFTs7lH8tl6LmADOt0s9Cc_5es-DyXzxKMHtJclvfsjZCZoZYr6dwmF104OhBo_h73k7J1noZuojZOdVGesNRrCOhSgvb7AJq26h39RksS54ITw89IbtbValqXCLT9_gKyHy492BXEkR-kvGibglKshKsthm8obhnzRugfNAQiBGL6-DXGgK1DlmPGCKJNI3r72tAuoLK-h"/>
+<img alt="Download on the App Store" class="h-full cursor-pointer" data-alt="Apple App Store download badge" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_XhmAVOA0h4cXpdqxcvV3gR7lLTj9UTvdHxSHbNgaDfdYwOZPmPfE9-tZeArWgQJR5nlu4Dwy_fq67kNhyENBHpH5aPjfn4KlTfGbgEjMTmkMIyQRRHIeH6Fd-nNUnS2HaVLkK9AO6XAV0JU2F7M1WTj3dL92uaUKHcDBCbg5TrUy6-qeVP9ULhwBONk9KU6fxFnAEFfZBZ54xbtXSd8XaZjaVtxIxVWue5MW4uaYhziP25S065fzSTrBkwWoRr1V3Ej9t0Wt7E8P"/>
+</div>
+</div>
+</div>
+<!-- Footer Links -->
+<footer class="mt-auto py-8 w-full max-w-[960px]">
+<div class="flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs text-slate-500 font-display">
+<a class="hover:underline" href="#">Meta</a>
+<a class="hover:underline" href="#">About</a>
+<a class="hover:underline" href="#">Blog</a>
+<a class="hover:underline" href="#">Jobs</a>
+<a class="hover:underline" href="#">Help</a>
+<a class="hover:underline" href="#">API</a>
+<a class="hover:underline" href="#">Privacy</a>
+<a class="hover:underline" href="#">Terms</a>
+<a class="hover:underline" href="#">Locations</a>
+<a class="hover:underline" href="#">Piexlinsta Lite</a>
+<a class="hover:underline" href="#">Threads</a>
+<a class="hover:underline" href="#">Contact Uploading &amp; Non-Users</a>
+<a class="hover:underline" href="#">Meta Verified</a>
+</div>
+<div class="flex justify-center mt-4 gap-4 text-xs text-slate-500">
+<select class="bg-transparent border-none focus:ring-0 cursor-pointer p-0 text-xs">
+<option>English</option>
+<option>Spanish</option>
+<option>French</option>
+</select>
+<span>© 2024 Piexlinsta from Meta</span>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sign Up • Piexlinsta</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#256af4",
+                "background-light": "#f5f6f8",
+                "background-dark": "#101622",
+              },
+              fontFamily: {
+                "display": ["Plus Jakarta Sans"]
+              },
+              borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        .insta-gradient-bg {
+            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex flex-col items-center justify-center p-4">
+<div class="w-full max-w-[350px] flex flex-col gap-3">
+<!-- Main Sign Up Card -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 sm:p-10 flex flex-col items-center rounded-lg shadow-sm">
+<!-- Logo Section -->
+<div class="flex items-center gap-2 mb-4">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-2xl">grid_view</span>
+</div>
+<h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Piexlinsta</h1>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-center font-semibold text-base mb-6 leading-tight">
+                Sign up to see photos and videos from your friends.
+            </p>
+<!-- Facebook Login -->
+<button class="w-full bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md flex items-center justify-center gap-2 mb-4 transition-colors">
+<span class="material-symbols-outlined text-xl">social_leaderboard</span>
+<span>Log in with Facebook</span>
+</button>
+<!-- Divider -->
+<div class="w-full flex items-center gap-4 mb-4">
+<div class="h-[1px] bg-slate-200 dark:bg-slate-700 flex-grow"></div>
+<span class="text-slate-400 dark:text-slate-500 text-xs font-bold uppercase">OR</span>
+<div class="h-[1px] bg-slate-200 dark:bg-slate-700 flex-grow"></div>
+</div>
+<!-- Form -->
+<form method="post" class="w-full space-y-2">
+{% csrf_token %}
+{% if form.errors %}
+<ul class="mb-2 text-red-500 text-xs space-y-1">
+{% for field in form %}
+{% for error in field.errors %}
+<li>{{ error }}</li>
+{% endfor %}
+{% endfor %}
+{% for error in form.non_field_errors %}
+<li>{{ error }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+<div>
+<input name="contact" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-slate-400 dark:focus:border-slate-500 text-slate-900 dark:text-slate-100" placeholder="Mobile Number or Email" required="" type="text"/>
+</div>
+<div>
+<input name="full_name" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-slate-400 dark:focus:border-slate-500 text-slate-900 dark:text-slate-100" placeholder="Full Name" required="" type="text"/>
+</div>
+<div>
+<input name="username" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-slate-400 dark:focus:border-slate-500 text-slate-900 dark:text-slate-100" placeholder="Username" required="" type="text"/>
+</div>
+<div>
+<input name="password1" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-slate-400 dark:focus:border-slate-500 text-slate-900 dark:text-slate-100" placeholder="Password" required="" type="password"/>
+</div>
+<div>
+<input name="password2" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-slate-400 dark:focus:border-slate-500 text-slate-900 dark:text-slate-100" placeholder="Confirm Password" required="" type="password"/>
+</div>
+<div class="pt-2">
+<p class="text-[12px] text-slate-500 dark:text-slate-400 text-center leading-4">
+                        People who use our service may have uploaded your contact information to Piexlinsta. <a class="font-semibold text-slate-600 dark:text-slate-300" href="#">Learn More</a>
+</p>
+</div>
+<div class="pt-2">
+<p class="text-[12px] text-slate-500 dark:text-slate-400 text-center leading-4">
+                        By signing up, you agree to our <a class="font-semibold text-slate-600 dark:text-slate-300" href="#">Terms</a>, <a class="font-semibold text-slate-600 dark:text-slate-300" href="#">Privacy Policy</a> and <a class="font-semibold text-slate-600 dark:text-slate-300" href="#">Cookies Policy</a>.
+                    </p>
+</div>
+<button class="w-full bg-primary/80 hover:bg-primary text-white font-bold py-2 px-4 rounded-md mt-4 transition-colors" type="submit">
+                    Sign Up
+                </button>
+</form>
+</div>
+<!-- Log In Card -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 flex flex-col items-center rounded-lg shadow-sm">
+<p class="text-sm text-slate-900 dark:text-slate-100">
+                Have an account? <a class="text-primary font-bold" href="{% url 'login' %}">Log in</a>
+</p>
+</div>
+<!-- App Store Links -->
+<div class="flex flex-col items-center gap-4 mt-2">
+<p class="text-sm text-slate-900 dark:text-slate-100">Get the app.</p>
+<div class="flex gap-2 h-10">
+<img alt="Google Play" class="h-full cursor-pointer" data-alt="Google Play Store download badge with dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoZJMeLxriPHrhOZ7mwBycwmjIuXhtnmfjfrYzRt2HG517M4Iwzo-Ba6xm3kHSdVaZ0hAIY7H2kiGoefDUyh0i1DERa9LeufZCwy9ucc3nfyoHpMoo42Dp8oK1jl_REPn7lkL3DnBCOXObLGmwD7j76Hz69kdcjfdFeIpR8a3AWvG4YSQsNIiZ4084AWmDOSA2LkG_XBzz0LE9of6VZsWZHK0KqC2b83ugBfuTz1DgsExz9GYoI3byo5iApuFAT9VkSeAIr4DmzVtV"/>
+<img alt="App Store" class="h-full cursor-pointer" data-alt="Apple App Store download badge with dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCarxFU4UhFYzQi_6PJUAFB6XWJOZfveGsXthpxgb3AAa9NfkLtZ-d-jCz21Dd3DrdV3ltf-SCrDr498agWiJDBiUKH_rOtOmlm7TQ5PILgTV8iLifyO0ots8UjNUV0Jiq-v--UDcTetsRI9qDEC59wV_Dg6Q4VCmS7cuZs-DtxUaiWgFR47siwUy2RGVxUnsg9hwKZqvA8ZOUmk9jOvI5-7mUgRwMA1b74O4GF_Ep1VxnWSPlvzl7LpGeJ72Gu0cKLuaaJkUciaLFh"/>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-12 w-full max-w-[960px] px-4">
+<div class="flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs text-slate-500 dark:text-slate-400 uppercase">
+<a class="hover:underline" href="#">Meta</a>
+<a class="hover:underline" href="#">About</a>
+<a class="hover:underline" href="#">Blog</a>
+<a class="hover:underline" href="#">Jobs</a>
+<a class="hover:underline" href="#">Help</a>
+<a class="hover:underline" href="#">API</a>
+<a class="hover:underline" href="#">Privacy</a>
+<a class="hover:underline" href="#">Terms</a>
+<a class="hover:underline" href="#">Locations</a>
+<a class="hover:underline" href="#">Piexlinsta Lite</a>
+<a class="hover:underline" href="#">Threads</a>
+<a class="hover:underline" href="#">Contact Uploading &amp; Non-Users</a>
+<a class="hover:underline" href="#">Meta Verified</a>
+</div>
+<div class="mt-6 flex flex-wrap justify-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+<select class="bg-transparent border-none focus:ring-0 cursor-pointer">
+<option>English</option>
+<option>Spanish</option>
+<option>French</option>
+<option>German</option>
+</select>
+<span>© 2024 Piexlinsta from Meta</span>
+</div>
+</footer>
+</body></html>
