@@ -261,6 +261,7 @@
                 <span>{{ post.comments.count }}</span>
               </div>
             </div>
+            {% if is_owner %}
             <form method="post" action="{% url 'post_delete' post.id %}">
               {% csrf_token %}
               <input type="hidden" name="next" value="{{ request.path }}">
@@ -270,6 +271,7 @@
                 Delete
               </button>
             </form>
+            {% endif %}
           </div>
         </div>
         {% endfor %}
